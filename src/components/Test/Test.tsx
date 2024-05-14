@@ -10,6 +10,7 @@ import {
   Container,
   Box,
   Grid,
+  styled,
 } from "@mui/material";
 
 const data = [
@@ -22,6 +23,14 @@ const data = [
   { name: "Item G", price: 235 },
   { name: "Item H", price: 400 },
 ];
+
+const Colors = {
+  background: "#121212",
+  cardBackground: "#212121",
+  primary: "#03dac6",
+  text: "#ffffff",
+  mutedText: "rgba(255,255,255,0.7)",
+};
 
 const Test = () => {
   const [filter, setFilter] = useState<string>("");
@@ -39,19 +48,33 @@ const Test = () => {
   };
 
   return (
-    <Container>
-      <Box mt={4} mb={2}>
-        <Typography variant="h4" gutterBottom>
+    <Container style={{ background: Colors.background }}>
+      <Box mt={2} mb={2}>
+        <Typography variant="h4" gutterBottom style={{ color: Colors.primary }}>
           Space01 Test
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField
+            <CustomTextField
               fullWidth
               label="Search"
               variant="outlined"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
+              style={{
+                background: Colors.cardBackground,
+                color: Colors.text,
+              }}
+              InputProps={{
+                style: {
+                  color: Colors.text,
+                },
+              }}
+              InputLabelProps={{
+                style: {
+                  color: Colors.mutedText,
+                },
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -59,6 +82,11 @@ const Test = () => {
               fullWidth
               variant="contained"
               color="primary"
+              style={{
+                background: Colors.primary,
+                color: Colors.background,
+                fontWeight: "bold",
+              }}
               onClick={onButtonClick}
             >
               {showCheapest ? "Show all" : "Show cheapest"}
@@ -66,22 +94,42 @@ const Test = () => {
           </Grid>
         </Grid>
       </Box>
-      {itemsToRender.length === 0 ? (
-        <Typography variant="body1">No items found</Typography>
-      ) : (
-        <List>
-          {itemsToRender.map((item, index) => (
-            <ListItem key={index}>
-              <ListItemText
-                primary={item.name}
-                secondary={`Price: £${item.price}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-      )}
+      <Box mb={2}>
+        {itemsToRender.length === 0 ? (
+          <Typography variant="body1" style={{ color: Colors.primary }}>
+            No items found
+          </Typography>
+        ) : (
+          <List>
+            {itemsToRender.map((item, index) => (
+              <ListItem
+                key={index}
+                style={{ background: Colors.cardBackground }}
+              >
+                <ListItemText
+                  primary={item.name}
+                  secondary={`Price: £${item.price}`}
+                  style={{ color: Colors.text }}
+                  secondaryTypographyProps={{ color: Colors.mutedText }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        )}
+      </Box>
     </Container>
   );
 };
+
+const CustomTextField = styled(TextField)`
+  & label.Mui-focused {
+    color: ${Colors.primary};
+  }
+  & .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border-color: ${Colors.primary};
+    }
+  }
+`;
 
 export default Test;
